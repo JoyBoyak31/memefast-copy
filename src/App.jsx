@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
@@ -7,7 +8,7 @@ import { clusterApiUrl } from '@solana/web3.js';
 import WalletConnection from './components/WalletConnection';
 import TokenCopy from './components/TokenCopy';
 
-// Default styles that can be overridden
+// Default styles for wallet adapter
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
           <div className="App">
-            <header>
+            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderBottom: '1px solid #eee' }}>
               <h1>SPL Token Copy</h1>
               <WalletConnection />
             </header>

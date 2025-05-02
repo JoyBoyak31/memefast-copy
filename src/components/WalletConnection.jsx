@@ -1,6 +1,10 @@
+// src/components/WalletConnection.jsx
 import React from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+
+// Import the default styles
+import '@solana/wallet-adapter-react-ui/styles.css';
 
 function WalletConnection() {
   const { publicKey } = useWallet();
