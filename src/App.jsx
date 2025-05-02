@@ -1,35 +1,36 @@
-// src/App.jsx
 import React from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
-import WalletConnection from './components/WalletConnection';
-import TokenCopy from './components/TokenCopy';
+import TokenList from './components/token/TokenList';
 
-// Default styles for wallet adapter
+// Import wallet adapter styles
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 function App() {
-  // Set up Solana network
+  // Set up Solana network (Devnet for testing)
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = clusterApiUrl(network);
   
-  // Set up wallet adapters
-  const wallets = [new PhantomWalletAdapter()];
+  // Initialize wallet adapters
+  const wallets = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter()
+  ];
 
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <div className="App">
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderBottom: '1px solid #eee' }}>
-              <h1>SPL Token Copy</h1>
-              <WalletConnection />
+          <div className="app">
+            <header>
+              <h1>Pump.fun Token Copy</h1>
+              <WalletMultiButton />
             </header>
             <main>
-              <TokenCopy />
+              <TokenList />
             </main>
           </div>
         </WalletModalProvider>
