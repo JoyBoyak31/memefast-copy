@@ -1,7 +1,6 @@
 // src/components/token/CopyTokenButton.jsx
 import React, { useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
-import '../styles/tokens.css';
 
 const CopyTokenButton = ({ token, onSuccess, onError }) => {
   const { connection } = useConnection();

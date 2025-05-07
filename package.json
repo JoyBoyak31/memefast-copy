@@ -16,8 +16,14 @@
     "@solana/wallet-adapter-wallets": "^0.19.36",
     "@solana/web3.js": "^1.98.2",
     "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

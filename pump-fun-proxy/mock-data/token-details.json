@@ -1,0 +1,350 @@
+{
+  "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU": {
+    "mint": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+    "name": "Solana",
+    "symbol": "SOL",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+    "price": 143.76,
+    "volume24h": 1245789,
+    "marketCap": 61530284800,
+    "supply": 435300000,
+    "bondingCurve": {
+      "spotPrice": 143.76,
+      "delta": 0.000010233556680311856,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 249157.80000000002,
+      "liquidity": 1733.1510851419034,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Solana",
+      "symbol": "SOL",
+      "description": "This is a Solana token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/sol",
+        "website": "https://sol.com"
+      }
+    }
+  },
+  "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263": {
+    "mint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+    "name": "Bonk",
+    "symbol": "BONK",
+    "image": "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+    "price": 0.000028,
+    "volume24h": 9654300,
+    "marketCap": 1680000000,
+    "supply": 60000000000000,
+    "bondingCurve": {
+      "spotPrice": 0.000028,
+      "delta": 0.000007977700350230348,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 1930860,
+      "liquidity": 68959285714.28572,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Bonk",
+      "symbol": "BONK",
+      "description": "This is a Bonk token on Solana.",
+      "imageUrl": "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+      "social": {
+        "twitter": "https://twitter.com/bonk",
+        "website": "https://bonk.com"
+      }
+    }
+  },
+  "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump": {
+    "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
+    "name": "Pump",
+    "symbol": "PUMP",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+    "price": 0.018,
+    "volume24h": 652790,
+    "marketCap": 180000000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.018,
+      "delta": 0.000007683089438060818,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 130558,
+      "liquidity": 7253222.222222223,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Pump",
+      "symbol": "PUMP",
+      "description": "This is a Pump token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/pump",
+        "website": "https://pump.com"
+      }
+    }
+  },
+  "MEMEarqHWWC2xVCLz14Pa3tgbVRtzANRXbXj2pLVchY": {
+    "mint": "MEMEarqHWWC2xVCLz14Pa3tgbVRtzANRXbXj2pLVchY",
+    "name": "MEME",
+    "symbol": "MEME",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac/token-mango-256.png",
+    "price": 0.023,
+    "volume24h": 1582700,
+    "marketCap": 690000000,
+    "supply": 30000000000,
+    "bondingCurve": {
+      "spotPrice": 0.023,
+      "delta": 0.000005891022823527783,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 316540,
+      "liquidity": 13762608.695652176,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "MEME",
+      "symbol": "MEME",
+      "description": "This is a MEME token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac/token-mango-256.png",
+      "social": {
+        "twitter": "https://twitter.com/meme",
+        "website": "https://meme.com"
+      }
+    }
+  },
+  "DoGEWM1tsuR8mGVihAfqbMeQUdQZ94JQHBCWKy8iQcAe": {
+    "mint": "DoGEWM1tsuR8mGVihAfqbMeQUdQZ94JQHBCWKy8iQcAe",
+    "name": "Dogecoin",
+    "symbol": "DOGE",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DogmxdykbnGYJHTSXwiCHuYxjcpYPTnN8PkjNbwGr2vs/logo.png",
+    "price": 0.00015,
+    "volume24h": 527890,
+    "marketCap": 4500000,
+    "supply": 30000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00015,
+      "delta": 0.000009065002475122297,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 105578,
+      "liquidity": 703853333.3333335,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Dogecoin",
+      "symbol": "DOGE",
+      "description": "This is a Dogecoin token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DogmxdykbnGYJHTSXwiCHuYxjcpYPTnN8PkjNbwGr2vs/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/doge",
+        "website": "https://doge.com"
+      }
+    }
+  },
+  "BoghdU39SYYouF1Y1TuBKuRbVVsAFhM2UkXbKrmLvZDh": {
+    "mint": "BoghdU39SYYouF1Y1TuBKuRbVVsAFhM2UkXbKrmLvZDh",
+    "name": "Boghda",
+    "symbol": "BOGH",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+    "price": 0.0002,
+    "volume24h": 389520,
+    "marketCap": 2000000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.0002,
+      "delta": 0.000011642085112810078,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 77904,
+      "liquidity": 389520000,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Boghda",
+      "symbol": "BOGH",
+      "description": "This is a Boghda token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/bogh",
+        "website": "https://bogh.com"
+      }
+    }
+  },
+  "9BWQX5J4iXzjVSKiGThRVjHjdVKKMYNVBfCPxwUaWYLF": {
+    "mint": "9BWQX5J4iXzjVSKiGThRVjHjdVKKMYNVBfCPxwUaWYLF",
+    "name": "Moo Deng",
+    "symbol": "DENG",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+    "price": 0.00043,
+    "volume24h": 223950,
+    "marketCap": 4300000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00043,
+      "delta": 0.00001235316812126584,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 44790,
+      "liquidity": 104162790.69767442,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Moo Deng",
+      "symbol": "DENG",
+      "description": "This is a Moo Deng token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/deng",
+        "website": "https://deng.com"
+      }
+    }
+  },
+  "3nJLGGYRrbfJThDePCvGkSWhYwMYYysPZYLVaFxd2XzA": {
+    "mint": "3nJLGGYRrbfJThDePCvGkSWhYwMYYysPZYLVaFxd2XzA",
+    "name": "Peanut",
+    "symbol": "PNUT",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+    "price": 0.00018,
+    "volume24h": 351470,
+    "marketCap": 1800000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00018,
+      "delta": 0.000014978258503936225,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 70294,
+      "liquidity": 390522222.2222222,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Peanut",
+      "symbol": "PNUT",
+      "description": "This is a Peanut token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/pnut",
+        "website": "https://pnut.com"
+      }
+    }
+  },
+  "JCVAv9h3SYbtrJm39L5wiRwLYwJLcKQRFBUy7dnuH7kp": {
+    "mint": "JCVAv9h3SYbtrJm39L5wiRwLYwJLcKQRFBUy7dnuH7kp",
+    "name": "JCVA",
+    "symbol": "JCVA",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac/token-mango-256.png",
+    "price": 0.00028,
+    "volume24h": 193450,
+    "marketCap": 2800000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00028,
+      "delta": 0.000006141324483247817,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 38690,
+      "liquidity": 138178571.42857143,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "JCVA",
+      "symbol": "JCVA",
+      "description": "This is a JCVA token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac/token-mango-256.png",
+      "social": {
+        "twitter": "https://twitter.com/jcva",
+        "website": "https://jcva.com"
+      }
+    }
+  },
+  "FLoWrZfkbJd8ufJ6JsPiL1fJMGLtCDUJGxHJBTUJvTGf": {
+    "mint": "FLoWrZfkbJd8ufJ6JsPiL1fJMGLtCDUJGxHJBTUJvTGf",
+    "name": "Flower",
+    "symbol": "FLWR",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/kinXdEcpDQeHPEuQnqmUgtYykqKGVFq6CeVX5iAHJq6/logo.png",
+    "price": 0.00012,
+    "volume24h": 85760,
+    "marketCap": 1200000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00012,
+      "delta": 0.000013352605363281223,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 17152,
+      "liquidity": 142933333.33333334,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Flower",
+      "symbol": "FLWR",
+      "description": "This is a Flower token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/kinXdEcpDQeHPEuQnqmUgtYykqKGVFq6CeVX5iAHJq6/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/flwr",
+        "website": "https://flwr.com"
+      }
+    }
+  },
+  "CATofbYLHNS2kJKiL4zz9RKrJQvQxQEY9DL4KGLvaRn5": {
+    "mint": "CATofbYLHNS2kJKiL4zz9RKrJQvQxQEY9DL4KGLvaRn5",
+    "name": "Cat",
+    "symbol": "CAT",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+    "price": 0.00031,
+    "volume24h": 276850,
+    "marketCap": 3100000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00031,
+      "delta": 0.00000651711813266241,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 55370,
+      "liquidity": 178612903.22580647,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Cat",
+      "symbol": "CAT",
+      "description": "This is a Cat token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/cat",
+        "website": "https://cat.com"
+      }
+    }
+  },
+  "FRoDcYgHq9SmudHrfYjbUgQGi7swFfcLH6hPXNREnsgj": {
+    "mint": "FRoDcYgHq9SmudHrfYjbUgQGi7swFfcLH6hPXNREnsgj",
+    "name": "Frog",
+    "symbol": "FROG",
+    "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+    "price": 0.00019,
+    "volume24h": 142680,
+    "marketCap": 1900000,
+    "supply": 10000000000,
+    "bondingCurve": {
+      "spotPrice": 0.00019,
+      "delta": 0.000005609751923936966,
+      "fee": 0.01,
+      "reserveAddress": "So11111111111111111111111111111111111111112",
+      "reserveBalance": 28536,
+      "liquidity": 150189473.6842105,
+      "reserveTokenMint": "So11111111111111111111111111111111111111112"
+    },
+    "metadata": {
+      "name": "Frog",
+      "symbol": "FROG",
+      "description": "This is a Frog token on Solana.",
+      "imageUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+      "social": {
+        "twitter": "https://twitter.com/frog",
+        "website": "https://frog.com"
+      }
+    }
+  }
+}
