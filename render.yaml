@@ -1,4 +1,5 @@
- type: web
+  # Updated backend API proxy for memefast functionality
+  - type: web
     name: memefast-api-proxy
     env: node
     buildCommand: cd pump-fun-proxy && npm install

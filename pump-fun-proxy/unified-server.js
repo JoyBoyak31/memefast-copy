@@ -10,7 +10,7 @@ const path = require('path');
 
 // Configuration
 const config = {
-    port: process.env.PORT || 10000, // Use the PORT env variable Render provides
+    port: process.env.PORT || 5000,
     pumpFunBaseUrl: 'https://frontend-api-v3.pump.fun',
     wsUrls: [
         'wss://pumpportal.fun/api/data',
@@ -382,10 +382,220 @@ const generateCandlestickData = (tokenAddress, timeframe = 5, limit = 100) => {
     return candlesticks;
 };
 
-// Connect to Pump.fun WebSocket (and other WebSocket functions)
-// ... [Include your existing WebSocket code here]
+// =============================================
+// WebSocket Functions
+// =============================================
 
-// API Routes
+// Fetch WebSocket URL from Pump.fun website
+async function discoverWebSocketUrl() {
+    try {
+        console.log('Attempting to discover WebSocket URL from Pump.fun website...');
+
+        // Fetch the main page HTML
+        const response = await axios.get('https://pump.fun/', {
+            headers: {
+                'User-Agent': config.userAgent
+            }
+        });
+
+        // Look for WebSocket related URLs in the HTML
+        const html = response.data;
+
+        // Various patterns to search for
+        const patterns = [
+            /wss?:\/\/[^"']+?\/ws/g,
+            /wss?:\/\/[^"']+?\/websocket/g,
+            /wss?:\/\/[^"']+?\/socket\.io/g,
+            /wss?:\/\/[^"']+?\/api\/data/g
+        ];
+
+        let discoveredUrls = [];
+
+        // Try to find WebSocket URLs in the HTML
+        for (const pattern of patterns) {
+            const matches = html.match(pattern);
+            if (matches) {
+                discoveredUrls = [...discoveredUrls, ...matches];
+            }
+        }
+
+        if (discoveredUrls.length > 0) {
+            console.log('Discovered potential WebSocket URLs:', discoveredUrls);
+            // Add discovered URLs to the beginning of our list to try them first
+            config.wsUrls = [...discoveredUrls.filter(url => !config.wsUrls.includes(url)), ...config.wsUrls];
+        } else {
+            console.log('No WebSocket URLs discovered from website');
+        }
+    } catch (error) {
+        console.error('Error discovering WebSocket URL:', error.message);
+    }
+}
+
+// Connect to Pump.fun WebSocket using a URL from our list
+async function connectToPumpFun() {
+    if (pumpWebSocket) {
+        pumpWebSocket.close();
+        pumpWebSocket = null;
+    }
+
+    clearTimeout(reconnectTimer);
+
+    // Try to discover WebSocket URL first
+    await discoverWebSocketUrl();
+
+    // Get the next URL to try from our list
+    const wsUrl = config.wsUrls[currentWsUrlIndex];
+    console.log(`Connecting to Pump.fun WebSocket (Attempt ${currentWsUrlIndex + 1}/${config.wsUrls.length}): ${wsUrl}`);
+
+    try {
+        // Try connection to current URL
+        pumpWebSocket = new WebSocket(wsUrl);
+
+        pumpWebSocket.on('open', () => {
+            console.log(`Connected successfully to ${wsUrl}`);
+            isConnectedToPump = true;
+
+            // Reset URL index since we found a working one
+            currentWsUrlIndex = config.wsUrls.indexOf(wsUrl);
+
+            // Notify all clients about successful connection
+            io.emit('connectionStatus', { status: 'connected', url: wsUrl });
+
+            // Try to subscribe to token creation events
+            console.log('Sending subscription request...');
+            try {
+                // Try different subscription message formats
+                const subscriptions = [
+                    { method: "subscribeNewToken" },
+                    { action: "subscribe", channel: "newToken" },
+                    { type: "subscribe", event: "token_created" },
+                    { subscribe: "token_updates" }
+                ];
+
+                // Send all subscription formats - one might work
+                for (const sub of subscriptions) {
+                    pumpWebSocket.send(JSON.stringify(sub));
+                }
+
+                // Resubscribe to all watched tokens with different formats
+                if (watchedTokens.size > 0) {
+                    const tokensArray = Array.from(watchedTokens);
+                    const tokenSubscriptions = [
+                        { method: "subscribeTokenTrade", keys: tokensArray },
+                        { action: "subscribe", tokens: tokensArray },
+                        { type: "subscribe", event: "token_trade", tokens: tokensArray },
+                        { subscribe: "token_trades", tokens: tokensArray }
+                    ];
+
+                    for (const sub of tokenSubscriptions) {
+                        pumpWebSocket.send(JSON.stringify(sub));
+                    }
+
+                    console.log(`Attempted to resubscribe to ${tokensArray.length} tokens`);
+                }
+            } catch (err) {
+                console.error('Error sending subscription:', err);
+            }
+        });
+
+        pumpWebSocket.on('message', (data) => {
+            try {
+                const message = JSON.parse(data.toString());
+                console.log('Message from Pump.fun:', JSON.stringify(message).substring(0, 100) + '...');
+
+                // Forward message to all connected clients
+                io.emit('pumpMessage', message);
+
+                // Also log subscription success messages
+                if (message.message && message.message.includes('subscribed')) {
+                    console.log('Subscription confirmed:', message.message);
+                }
+            } catch (error) {
+                console.error('Error parsing message from Pump.fun:', error);
+            }
+        });
+
+        pumpWebSocket.on('close', (code, reason) => {
+            console.log(`Disconnected from ${wsUrl}: ${code} ${reason || 'No reason provided'}`);
+            isConnectedToPump = false;
+
+            // Notify all clients about disconnection
+            io.emit('connectionStatus', { status: 'disconnected', code, reason });
+
+            // Try the next URL in our list
+            currentWsUrlIndex = (currentWsUrlIndex + 1) % config.wsUrls.length;
+
+            // Attempt to reconnect after a delay
+            reconnectTimer = setTimeout(() => {
+                console.log('Attempting to reconnect with next URL...');
+                connectToPumpFun();
+            }, config.reconnectDelay);
+        });
+
+        pumpWebSocket.on('error', (error) => {
+            console.error(`WebSocket error for ${wsUrl}:`, error.message);
+            // Error is followed by a close event, so we'll handle reconnection there
+        });
+    } catch (error) {
+        console.error('Error initializing WebSocket:', error.message);
+
+        // Try the next URL immediately
+        currentWsUrlIndex = (currentWsUrlIndex + 1) % config.wsUrls.length;
+
+        // And retry soon
+        reconnectTimer = setTimeout(() => {
+            console.log('Immediately trying next URL...');
+            connectToPumpFun();
+        }, 1000);
+    }
+}
+
+// Simulate market update events for testing when not connected to real WebSocket
+function startSimulatedUpdates() {
+    if (isConnectedToPump) return; // Don't simulate if connected to real source
+
+    console.log('Starting simulated market updates for testing...');
+
+    // Generate sample data to simulate updates
+    const tokenAddresses = Array.from(watchedTokens);
+    if (tokenAddresses.length === 0) return;
+
+    // Send a simulated update more frequently (every 1.5 seconds) for faster market cap updates
+    setInterval(() => {
+        // Update multiple tokens in each cycle for more dynamic updates
+        const tokensToUpdate = Math.min(3, tokenAddresses.length);
+
+        for (let i = 0; i < tokensToUpdate; i++) {
+            // Pick a random token to update
+            const tokenIndex = Math.floor(Math.random() * tokenAddresses.length);
+            const tokenAddress = tokenAddresses[tokenIndex];
+
+            // Create a simulated market cap update with smaller changes (more realistic)
+            // Focus specifically on market cap updates (not full trades)
+            const currentMarketCap = Math.random() * 10000000; // Base market cap
+            const marketCapDelta = currentMarketCap * (Math.random() * 0.02 - 0.01); // +/- 1% change
+
+            const simulatedMarketUpdate = {
+                type: 'tokenUpdate',
+                token: {
+                    mint: tokenAddress,
+                    market_cap: currentMarketCap + marketCapDelta,
+                    usd_market_cap: currentMarketCap + marketCapDelta,
+                    // Include minimal reserves data for price calculation
+                    virtual_sol_reserves: Math.random() * 1000,
+                    virtual_token_reserves: Math.random() * 1000000000
+                }
+            };
+
+            console.log('Sending simulated market cap update for token:', tokenAddress);
+            io.emit('pumpMessage', simulatedMarketUpdate);
+        }
+    }, config.simulationDelay);
+}
+
+// =============================================
+// REST API Endpoints
+// =============================================
 
 // Trending tokens endpoint
 app.get('/api/coins/for-you', async (req, res) => {
@@ -484,7 +694,7 @@ app.get('/api/candlesticks/:tokenAddress', (req, res) => {
     }
 });
 
-// Force refresh of cached data
+// Force refresh of cached data - Fix the route to include /api prefix
 app.get('/api/admin/force-fetch', async (req, res) => {
     try {
         console.log('Forcing refresh of token data from Pump.fun...');
@@ -517,7 +727,7 @@ app.get('/api/admin/force-fetch', async (req, res) => {
 app.get('/health', (req, res) => {
     res.json({
         status: 'ok',
-        message: 'Direct Pump.fun API proxy is running',
+        message: 'Unified Pump.fun API and WebSocket proxy is running',
         mockTokensCount: mockTokens.length,
         websocket: {
             connected: isConnectedToPump,
@@ -528,85 +738,179 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Add a root route to serve basic HTML
-app.get('/', (req, res) => {
-    res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Memefast API Server</title>
-            <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                    max-width: 800px;
-                    margin: 0 auto;
-                    padding: 20px;
-                    line-height: 1.6;
+// Serve static files for production (React build)
+if (process.env.NODE_ENV === 'production') {
+    // Serve static files
+    app.use(express.static(path.join(__dirname, 'client/build')));
+
+    // Handle React routing, return all requests to React app
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+}
+
+// =============================================
+// Socket.IO Connection Handling
+// =============================================
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+    console.log('New client connected:', socket.id);
+    clients.set(socket.id, { socket, watchedTokens: new Set() });
+
+    // Send current connection status to the new client
+    socket.emit('connectionStatus', {
+        status: isConnectedToPump ? 'connected' : 'disconnected'
+    });
+
+    // Handle client requesting to watch a token
+    socket.on('watchToken', (tokenAddress) => {
+        console.log(`Client ${socket.id} wants to watch token: ${tokenAddress}`);
+
+        // Track which tokens this client is watching
+        const clientData = clients.get(socket.id);
+        if (clientData) {
+            clientData.watchedTokens.add(tokenAddress);
+        }
+
+        // Add to global watched tokens
+        watchedTokens.add(tokenAddress);
+
+        // Subscribe to token if connected to Pump.fun
+        if (isConnectedToPump && pumpWebSocket) {
+            try {
+                // Try different subscription formats
+                const subscriptions = [
+                    { method: "subscribeTokenTrade", keys: [tokenAddress] },
+                    { action: "subscribe", tokens: [tokenAddress] },
+                    { type: "subscribe", event: "token_trade", tokens: [tokenAddress] },
+                    { subscribe: "token_trades", tokens: [tokenAddress] }
+                ];
+
+                for (const sub of subscriptions) {
+                    pumpWebSocket.send(JSON.stringify(sub));
                 }
-                h1 {
-                    color: #3b82f6;
+
+                console.log(`Attempted to subscribe to token: ${tokenAddress}`);
+            } catch (error) {
+                console.error(`Error subscribing to token ${tokenAddress}:`, error);
+            }
+        }
+    });
+
+    // Handle client requesting to unwatch a token
+    socket.on('unwatchToken', (tokenAddress) => {
+        console.log(`Client ${socket.id} no longer watching token: ${tokenAddress}`);
+
+        // Remove from this client's watched tokens
+        const clientData = clients.get(socket.id);
+        if (clientData) {
+            clientData.watchedTokens.delete(tokenAddress);
+        }
+
+        // Check if any other clients are still watching this token
+        let isStillWatched = false;
+        for (const [id, data] of clients.entries()) {
+            if (id !== socket.id && data.watchedTokens.has(tokenAddress)) {
+                isStillWatched = true;
+                break;
+            }
+        }
+
+        // If no one is watching, unsubscribe globally
+        if (!isStillWatched) {
+            watchedTokens.delete(tokenAddress);
+
+            if (isConnectedToPump && pumpWebSocket) {
+                try {
+                    pumpWebSocket.send(JSON.stringify({
+                        method: "unsubscribeTokenTrade",
+                        keys: [tokenAddress]
+                    }));
+                    console.log(`Unsubscribed from token: ${tokenAddress}`);
+                } catch (error) {
+                    console.error(`Error unsubscribing from token ${tokenAddress}:`, error);
                 }
-                .endpoint {
-                    background-color: #f3f4f6;
-                    padding: 10px;
-                    border-radius: 4px;
-                    margin-bottom: 10px;
+            }
+        }
+    });
+
+    // Handle disconnect
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+
+        // Get this client's watched tokens before removing
+        const clientData = clients.get(socket.id);
+        if (clientData) {
+            // Check each token to see if others are still watching
+            for (const tokenAddress of clientData.watchedTokens) {
+                let isStillWatched = false;
+                for (const [id, data] of clients.entries()) {
+                    if (id !== socket.id && data.watchedTokens.has(tokenAddress)) {
+                        isStillWatched = true;
+                        break;
+                    }
                 }
-                .method {
-                    font-weight: bold;
-                    color: #059669;
+
+                // If no one is watching, unsubscribe globally
+                if (!isStillWatched) {
+                    watchedTokens.delete(tokenAddress);
+
+                    if (isConnectedToPump && pumpWebSocket) {
+                        try {
+                            pumpWebSocket.send(JSON.stringify({
+                                method: "unsubscribeTokenTrade",
+                                keys: [tokenAddress]
+                            }));
+                            console.log(`Unsubscribed from token: ${tokenAddress}`);
+                        } catch (error) {
+                            console.error(`Error unsubscribing from token ${tokenAddress}:`, error);
+                        }
+                    }
                 }
-                a {
-                    color: #3b82f6;
-                    text-decoration: none;
-                }
-                a:hover {
-                    text-decoration: underline;
-                }
-            </style>
-        </head>
-        <body>
-            <h1>Memefast API Server</h1>
-            <p>This server provides access to Pump.fun token data. It's intended to be used as an API endpoint for the Memefast token explorer.</p>
-            
-            <h2>Available Endpoints:</h2>
-            <div class="endpoint">
-                <span class="method">GET</span> <a href="/api/coins/for-you">/api/coins/for-you</a> - Get trending tokens
-            </div>
-            <div class="endpoint">
-                <span class="method">GET</span> <a href="/api/coins/search?q=solana">/api/coins/search?q=solana</a> - Search tokens
-            </div>
-            <div class="endpoint">
-                <span class="method">GET</span> <a href="/api/coins/7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU">/api/coins/:tokenAddress</a> - Get token details
-            </div>
-            <div class="endpoint">
-                <span class="method">GET</span> <a href="/health">/health</a> - Server health check
-            </div>
-            
-            <h2>Server Status:</h2>
-            <p>The server is running on port: ${config.port}</p>
-            <p>WebSocket connection: ${isConnectedToPump ? 'Connected' : 'Disconnected'}</p>
-            <p>Cached tokens: ${mockTokens.length}</p>
-        </body>
-        </html>
-    `);
+            }
+        }
+
+        // Remove client from tracking
+        clients.delete(socket.id);
+    });
+
+    // Handle manual reconnect request
+    socket.on('reconnect', () => {
+        console.log('Manual reconnect requested by client:', socket.id);
+        connectToPumpFun();
+    });
 });
 
-// Start the server
-server.listen(config.port, '0.0.0.0', () => {
-    console.log(`Server running on port ${config.port}`);
+// =============================================
+// Start the Server
+// =============================================
+
+// Start the unified server
+server.listen(config.port, () => {
+    console.log(`Unified Pump.fun API and WebSocket server running on port ${config.port}`);
     console.log(`REST API endpoint: http://localhost:${config.port}/api/`);
+    console.log(`Socket.IO endpoint: ws://localhost:${config.port}/`);
     console.log(`Health check: http://localhost:${config.port}/health`);
-    console.log('Starting WebSocket connection...');
-    
-    // Add WebSocket functions here if needed
-    
-    // Fetch initial token data
-    fetchTrendingTokens().then(() => {
-        console.log('Initial token data fetched');
-    }).catch(err => {
-        console.error('Error fetching initial token data:', err);
-    });
+
+    // Connect to Pump.fun WebSocket
+    connectToPumpFun();
+
+    // Start background refresh of token data
+    console.log('Setting up background refresh of token data...');
+    setInterval(async () => {
+        try {
+            await fetchTrendingTokens(100);
+            console.log('Background refresh of token data completed');
+        } catch (error) {
+            console.error('Error in background refresh:', error);
+        }
+    }, 60000); // Refresh every minute
+
+    // Start simulated updates if unable to connect to real WebSocket after a delay
+    setTimeout(() => {
+        if (!isConnectedToPump) {
+            startSimulatedUpdates();
+        }
+    }, 30000); // Wait 30 seconds before starting simulations
 });
