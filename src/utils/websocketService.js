@@ -2,7 +2,7 @@
 /**
  * WebSocket service for real-time updates from Pump.fun via local proxy
  * Optimized for market cap updates with reduced refresh timers
- * Focuses on low-latency market data without token refresh
+ * Updated to connect to the unified server
  */
 import { io } from 'socket.io-client';
 
@@ -22,8 +22,9 @@ class WebSocketService {
     };
     this.watchedTokens = new Set();
     
-    // Configure socket.io URL
-    this.socketUrl = 'http://localhost:5001'; // Use the dedicated WebSocket proxy port
+    // Configure socket.io URL - UPDATED to use port 5000 for the unified server
+    // Don't use process.env in browser environment without proper configuration
+    this.socketUrl = 'http://localhost:5000';
     
     // Update frequency configuration - reduced for better performance
     this.updateFrequency = 1500; // 1.5 seconds between updates for faster market cap changes

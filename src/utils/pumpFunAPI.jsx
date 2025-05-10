@@ -33,9 +33,9 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   response => {
-    console.log(`API Response: ${response.status} from ${response.config.url}`, 
+    console.log(`API Response: ${response.status} from ${response.config.url}`,
       Array.isArray(response.data) ? `[${response.data.length} items]` : 'Data received');
-    
+
     // For token details, log the important values for debugging
     if (response.config.url.includes('/coins/') && !response.config.url.includes('/coins/for-you')) {
       console.log('Token details received:');
@@ -47,7 +47,7 @@ axiosInstance.interceptors.response.use(
         console.log('- Supply:', response.data.supply);
       }
     }
-    
+
     return response;
   },
   error => {
@@ -70,10 +70,10 @@ axiosInstance.interceptors.response.use(
 export const fetchTrendingTokens = async (limit = 48) => {
   try {
     console.log('Fetching trending tokens from proxy server...');
-    
+
     // Add a cache buster to avoid cached responses
     const cacheBuster = Date.now();
-    
+
     // Make the request to our proxy server
     const response = await axiosInstance.get('/coins/for-you', {
       params: {
@@ -94,7 +94,7 @@ export const fetchTrendingTokens = async (limit = 48) => {
     }
   } catch (error) {
     console.error('Error fetching trending tokens:', error.message);
-    
+
     // Fall back to mock data
     console.log('Using mock data as fallback');
     return mockTokens;
@@ -110,27 +110,27 @@ export const fetchTrendingTokens = async (limit = 48) => {
 export const fetchTokenDetails = async (address) => {
   try {
     console.log(`Fetching details for token: ${address}`);
-    
+
     // Add a cache buster to avoid cached responses
     const cacheBuster = Date.now();
-    
+
     // Make the request to our proxy server (which gets data directly from Pump.fun)
     const response = await axiosInstance.get(`/coins/${address}`, {
       params: {
         _: cacheBuster
       }
     });
-    
+
     if (response.data) {
       console.log('Successfully fetched token details');
-      
+
       // Log key values for verification
       console.log('Token details received:');
       console.log('- Name:', response.data.name);
       console.log('- Symbol:', response.data.symbol);
       console.log('- Market Cap:', response.data.marketCap);
       console.log('- Price:', response.data.price);
-      
+
       // Return the raw data from Pump.fun without any transformations
       return response.data;
     } else {
@@ -139,19 +139,19 @@ export const fetchTokenDetails = async (address) => {
     }
   } catch (error) {
     console.error(`Error fetching token details: ${error.message}`);
-    
+
     // Return mock token details or generate new ones
     const mockDetail = mockTokenDetails[address];
     if (mockDetail) {
       console.log('Using existing mock token details');
       return mockDetail;
     }
-    
+
     // Try to find the token in mock tokens
     const token = mockTokens.find(t => t.address === address || t.mint === address);
     if (token) {
       console.log('Generating mock details from token information');
-      
+
       // Generate mock details
       return {
         ...token,
@@ -176,7 +176,7 @@ export const fetchTokenDetails = async (address) => {
         }
       };
     }
-    
+
     console.warn('Could not find token in mock data');
     return null;
   }
@@ -191,10 +191,10 @@ export const fetchTokenDetails = async (address) => {
 export const searchTokens = async (query, limit = 48) => {
   try {
     console.log(`Searching for tokens with query: ${query}`);
-    
+
     // Add a cache buster to avoid cached responses
     const cacheBuster = Date.now();
-    
+
     const response = await axiosInstance.get('/coins/search', {
       params: {
         q: query,
@@ -204,7 +204,7 @@ export const searchTokens = async (query, limit = 48) => {
         _: cacheBuster
       }
     });
-    
+
     if (response.data && Array.isArray(response.data)) {
       console.log(`Found ${response.data.length} tokens matching query`);
       return response.data;
@@ -214,7 +214,7 @@ export const searchTokens = async (query, limit = 48) => {
     }
   } catch (error) {
     console.error(`Error searching tokens: ${error.message}`);
-    
+
     // Filter mock tokens as fallback
     console.log('Using filtered mock data as fallback');
     if (!query) return mockTokens.slice(0, limit);
@@ -239,10 +239,10 @@ export const searchTokens = async (query, limit = 48) => {
 export const fetchCandlestickData = async (address, timeframe = 5, limit = 100) => {
   try {
     console.log(`Fetching candlestick data for token: ${address}`);
-    
+
     // Add a cache buster to avoid cached responses
     const cacheBuster = Date.now();
-    
+
     const response = await axiosInstance.get(`/candlesticks/${address}`, {
       params: {
         offset: 0,
@@ -251,7 +251,7 @@ export const fetchCandlestickData = async (address, timeframe = 5, limit = 100) 
         _: cacheBuster
       }
     });
-    
+
     if (response.data && Array.isArray(response.data) && response.data.length > 0) {
       console.log(`Received ${response.data.length} candlesticks`);
       return response.data;
@@ -261,7 +261,7 @@ export const fetchCandlestickData = async (address, timeframe = 5, limit = 100) 
     }
   } catch (error) {
     console.error(`Error fetching candlesticks: ${error.message}`);
-    
+
     // Generate mock candlesticks as fallback
     console.log('Generating mock candlestick data');
     return generateMockCandlesticks(address, timeframe, limit);
@@ -275,9 +275,10 @@ export const fetchCandlestickData = async (address, timeframe = 5, limit = 100) 
 export const forceRefreshTrendingTokens = async () => {
   try {
     console.log('Forcing refresh of trending tokens...');
-    
+
+    // Fix the endpoint path - remove the /api prefix since it's already in the base URL
     const response = await axiosInstance.get('/admin/force-fetch');
-    
+
     if (response.data && response.data.success) {
       console.log('Successfully refreshed trending tokens');
       return response.data;

@@ -1,26 +1,25 @@
-// src/components/token/TokenList.jsx - With global auto-refresh
+// src/components/token/TokenList.jsx - Simplified version for React Router
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   fetchTrendingTokens,
-  fetchTokenDetails,
   searchTokens,
   forceRefreshTrendingTokens
 } from '../../utils/pumpFunAPI';
 import LiveTokenCard from './TokenCard';
-import TokenDetails from './TokenDetails';
 import TokenSearchBar from './TokenSearchBar';
 import RefreshButton from './RefreshButton';
 import websocketService from '../../utils/websocketService';
 
 const TokenList = () => {
+  // Add navigate from React Router
+  const navigate = useNavigate();
+
   // State management
   const [tokens, setTokens] = useState([]);
   const [filteredTokens, setFilteredTokens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedToken, setSelectedToken] = useState(null);
-  const [selectedTokenDetails, setSelectedTokenDetails] = useState(null);
-  const [detailsLoading, setDetailsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshStatus, setRefreshStatus] = useState(null);
@@ -28,10 +27,6 @@ const TokenList = () => {
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
   const [newTokenCount, setNewTokenCount] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // Auto-refresh settings
-  const [autoRefresh, setAutoRefresh] = useState(false);
-  const [refreshInterval, setRefreshInterval] = useState(30); // seconds
 
   // Pagination and layout
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,23 +79,6 @@ const TokenList = () => {
       }, 3000);
     }
   }, [searchQuery]);
-
-  // Setup global auto-refresh
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    console.log(`Setting up auto-refresh every ${refreshInterval} seconds`);
-
-    const intervalId = setInterval(() => {
-      console.log('Auto-refreshing all tokens...');
-      loadTrendingTokens(false); // Don't show full loading state
-    }, refreshInterval * 1000);
-
-    return () => {
-      console.log('Clearing auto-refresh interval');
-      clearInterval(intervalId);
-    };
-  }, [autoRefresh, refreshInterval, loadTrendingTokens]);
 
   // Set up WebSocket connection when component mounts
   useEffect(() => {
@@ -191,6 +169,12 @@ const TokenList = () => {
     loadTrendingTokens();
   }, [loadTrendingTokens]);
 
+  // Navigate to token details page when a token is selected
+  const handleSelectToken = (token) => {
+    console.log('Selected token:', token);
+    navigate(`/token/${token.mint || token.address}`);
+  };
+
   // Handle manual refresh
   const handleRefresh = async () => {
     try {
@@ -230,50 +214,6 @@ const TokenList = () => {
     websocketService.reconnect();
   };
 
-  // Fetch token details when a token is selected
-  useEffect(() => {
-    if (!selectedToken) {
-      setSelectedTokenDetails(null);
-      return;
-    }
-
-    const loadTokenDetails = async () => {
-      try {
-        setDetailsLoading(true);
-
-        // Use 'mint' property instead of 'address'
-        const tokenAddress = selectedToken.mint || selectedToken.address;
-        console.log(`Loading details for token: ${tokenAddress}`);
-
-        const details = await fetchTokenDetails(tokenAddress);
-        console.log('Token details loaded:', details);
-
-        setSelectedTokenDetails(details);
-      } catch (err) {
-        console.error('Error loading token details:', err);
-      } finally {
-        setDetailsLoading(false);
-      }
-    };
-
-    loadTokenDetails();
-  }, [selectedToken]);
-
-  // Handle token selection
-  const handleSelectToken = (token) => {
-    console.log('Selected token:', token);
-    setSelectedToken(token);
-
-    // Scroll to top when selecting a token
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Clear selected token
-  const handleClearSelection = () => {
-    setSelectedToken(null);
-    setSelectedTokenDetails(null);
-  };
-
   // Handle search
   const handleSearch = async (query) => {
     setSearchQuery(query);
@@ -289,42 +229,19 @@ const TokenList = () => {
 
     try {
       console.log(`Searching for tokens with query: ${query}`);
-
-      // Call the searchTokens function from pumpFunAPI
       const results = await searchTokens(query);
+      console.log(`Search returned ${results.length} results`);
 
-      // Verify that results is an array before proceeding
-      if (Array.isArray(results)) {
-        console.log(`Search returned ${results.length} results`);
-        setFilteredTokens(results);
-      } else {
-        console.error('Invalid search results format:', results);
-        throw new Error('Invalid search results format');
-      }
+      setFilteredTokens(results);
     } catch (err) {
       console.error('Error searching tokens:', err);
 
-      // Enhanced client-side fallback search with better filtering
+      // Fallback to client-side filtering if API search fails
       console.log('Falling back to client-side filtering');
-
-      // Convert query to lowercase for case-insensitive matching
-      const lowercaseQuery = query.toLowerCase();
-
-      // Apply more comprehensive filtering
-      const filtered = tokens.filter(token => {
-        // Check various token fields for matches
-        return (
-          // Check name and symbol (primary fields)
-          (token.name && token.name.toLowerCase().includes(lowercaseQuery)) ||
-          (token.symbol && token.symbol.toLowerCase().includes(lowercaseQuery)) ||
-
-          // Also check address/mint for direct matches
-          (token.address && token.address.toLowerCase() === lowercaseQuery) ||
-          (token.mint && token.mint.toLowerCase() === lowercaseQuery)
-        );
-      });
-
-      console.log(`Client-side filtering found ${filtered.length} matches`);
+      const filtered = tokens.filter(token =>
+        token.name.toLowerCase().includes(query.toLowerCase()) ||
+        token.symbol.toLowerCase().includes(query.toLowerCase())
+      );
       setFilteredTokens(filtered);
     } finally {
       setIsSearching(false);
@@ -481,138 +398,109 @@ const TokenList = () => {
     );
   }
 
+  // Simplified return statement - just the token list view
   return (
     <div className="token-list-container">
-      {!selectedToken ? (
-        // Token list view
-        <>
-          <div className="token-list-header">
-            <div className="title-section">
-              <h2>Trending Tokens on Pump.fun</h2>
-              {newTokenCount > 0 && (
-                <span className="new-token-badge">
-                  {newTokenCount} new {newTokenCount === 1 ? 'token' : 'tokens'}
-                </span>
-              )}
-            </div>
+      <div className="token-list-header">
+        <div className="title-section">
+          <h2>Trending Tokens on Pump.fun</h2>
+          {newTokenCount > 0 && (
+            <span className="new-token-badge">
+              {newTokenCount} new {newTokenCount === 1 ? 'token' : 'tokens'}
+            </span>
+          )}
+        </div>
 
-            <div className="token-list-actions">
-              <RefreshButton onRefresh={handleRefresh} />
+        <div className="token-list-actions">
+          <RefreshButton onRefresh={handleRefresh} />
 
-              <div className={`connection-status ${connectionStatus}`}>
-                <span className="status-dot"></span>
-                <span className="status-text">
-                  {connectionStatus === 'connected' ? 'Live Updates' :
-                    connectionStatus === 'connecting' ? 'Connecting...' :
-                      'Updates Offline'}
-                </span>
-                {connectionStatus !== 'connected' && (
-                  <button
-                    className="reconnect-button"
-                    onClick={handleReconnectWebSocket}
-                  >
-                    Reconnect
-                  </button>
-                )}
-              </div>
-
+          <div className={`connection-status ${connectionStatus}`}>
+            <span className="status-dot"></span>
+            <span className="status-text">
+              {connectionStatus === 'connected' ? 'Live Updates' :
+                connectionStatus === 'connecting' ? 'Connecting...' :
+                  'Updates Offline'}
+            </span>
+            {connectionStatus !== 'connected' && (
               <button
-                className="layout-toggle-button"
-                onClick={toggleLayoutMode}
-                title={layoutMode === 'grid' ? 'Switch to list view' : 'Switch to grid view'}
+                className="reconnect-button"
+                onClick={handleReconnectWebSocket}
               >
-                {layoutMode === 'grid' ? '📋 List' : '📊 Grid'}
+                Reconnect
               </button>
-            </div>
+            )}
           </div>
 
-          {refreshStatus && (
-            <div className={`refresh-status ${refreshStatus.type}`}>
-              {refreshStatus.message}
-            </div>
-          )}
+          <button
+            className="layout-toggle-button"
+            onClick={toggleLayoutMode}
+            title={layoutMode === 'grid' ? 'Switch to list view' : 'Switch to grid view'}
+          >
+            {layoutMode === 'grid' ? '📋 List' : '📊 Grid'}
+          </button>
+        </div>
+      </div>
 
-          <div className="refresh-controls">
-            <div className="refresh-info">
-              <div className="last-refreshed">
-                Last refreshed: {formatRefreshTime(lastRefreshed)}
-              </div>
-              {connectionStatus === 'connected' && (
-                <div className="auto-update-info">
-                  Live market cap updates enabled
-                </div>
-              )}
-            </div>
+      {refreshStatus && (
+        <div className={`refresh-status ${refreshStatus.type}`}>
+          {refreshStatus.message}
+        </div>
+      )}
 
-            <div className="refresh-info">
-              <div className="last-refreshed">
-                Last refreshed: {formatRefreshTime(lastRefreshed)}
-              </div>
-              {autoRefresh && <span className="auto-refresh-active">Auto-refresh ON</span>}
-              {connectionStatus === 'connected' && (
-                <div className="auto-update-info">
-                  Live market cap updates enabled
-                </div>
-              )}
-            </div>
+      <div className="refresh-controls">
+        <div className="refresh-info">
+          <div className="last-refreshed">
+            Last refreshed: {formatRefreshTime(lastRefreshed)}
           </div>
-
-          <TokenSearchBar onSearch={handleSearch} />
-
-          {isRefreshing && (
-            <div className="refreshing-indicator">
-              <div className="loading-spinner-small"></div>
-              <span>Refreshing tokens...</span>
+          {connectionStatus === 'connected' && (
+            <div className="auto-update-info">
+              Live market cap updates enabled
             </div>
           )}
+        </div>
+      </div>
 
-          {isSearching ? (
-            <div className="token-list-searching">
-              <div className="loading-spinner"></div>
-              <p>Searching tokens...</p>
+      <TokenSearchBar onSearch={handleSearch} />
+
+      {isRefreshing && (
+        <div className="refreshing-indicator">
+          <div className="loading-spinner-small"></div>
+          <span>Refreshing tokens...</span>
+        </div>
+      )}
+
+      {isSearching ? (
+        <div className="token-list-searching">
+          <div className="loading-spinner"></div>
+          <p>Searching tokens...</p>
+        </div>
+      ) : (
+        <>
+          {filteredTokens.length === 0 ? (
+            <div className="no-tokens-message">
+              {searchQuery ?
+                <p>No tokens found matching "{searchQuery}"</p> :
+                <p>No trending tokens found. Try refreshing the data.</p>
+              }
             </div>
           ) : (
             <>
-              {filteredTokens.length === 0 ? (
-                <div className="no-tokens-message">
-                  {searchQuery ?
-                    <p>No tokens found matching "{searchQuery}"</p> :
-                    <p>No trending tokens found. Try refreshing the data.</p>
-                  }
-                </div>
-              ) : (
-                <>
-                  <div className={`token-${layoutMode}`}>
-                    {currentTokens.map((token) => (
-                      <LiveTokenCard
-                        key={token.mint || token.address}
-                        token={token}
-                        onClick={() => handleSelectToken(token)}
-                        layout={layoutMode}
-                      />
-                    ))}
-                  </div>
+              <div className={`token-${layoutMode}`}>
+                {currentTokens.map((token) => (
+                  <LiveTokenCard
+                    key={token.mint || token.address}
+                    token={token}
+                    onClick={() => handleSelectToken(token)}
+                    layout={layoutMode}
+                  />
+                ))}
+              </div>
 
-                  <Pagination />
-                </>
-              )}
+              <Pagination />
             </>
           )}
         </>
-      ) : (
-        // Token details view
-        <div className="token-details-container">
-          <button onClick={handleClearSelection} className="back-button">
-            &larr; Back to Trending Tokens
-          </button>
-          <TokenDetails
-            token={selectedToken}
-            details={selectedTokenDetails}
-            loading={detailsLoading}
-          />
-        </div>
-      )
-      }
+      )}
 
       <style jsx>{`
         .token-list-container {

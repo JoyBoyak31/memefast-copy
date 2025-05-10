@@ -1,6 +1,6 @@
-// src/components/token/TokenPriceChart.jsx
+// Updated TokenPriceChart.jsx to work with the unified server
+
 import React, { useState, useEffect } from 'react';
-import { fetchCandlestickData } from '../../utils/pumpFunAPI';
 
 const TokenPriceChart = ({ tokenAddress }) => {
   const [candlesticks, setCandlesticks] = useState([]);
@@ -17,7 +17,15 @@ const TokenPriceChart = ({ tokenAddress }) => {
         setLoading(true);
         setError(null);
         
-        const data = await fetchCandlestickData(tokenAddress, timeframe, 100);
+        // Updated to use the unified server URL
+        const apiUrl = 'http://localhost:5000';
+        const response = await fetch(`${apiUrl}/api/candlesticks/${tokenAddress}?timeframe=${timeframe}&limit=100`);
+        
+        if (!response.ok) {
+          throw new Error(`API returned status: ${response.status}`);
+        }
+        
+        const data = await response.json();
         setCandlesticks(data);
       } catch (err) {
         console.error('Error loading candlestick data:', err);
@@ -226,6 +234,103 @@ const TokenPriceChart = ({ tokenAddress }) => {
           );
         })}
       </svg>
+      
+      <style jsx>{`
+        .token-price-chart {
+          background: white;
+          border-radius: 8px;
+          padding: 16px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+        
+        h3 {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+        }
+        
+        .timeframe-selector {
+          display: flex;
+          gap: 8px;
+        }
+        
+        .timeframe-button {
+          background: #f1f5f9;
+          border: none;
+          border-radius: 4px;
+          padding: 6px 12px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        
+        .timeframe-button.active {
+          background: #3b82f6;
+          color: white;
+        }
+        
+        .timeframe-button:hover:not(.active) {
+          background: #e2e8f0;
+        }
+        
+        .price-chart {
+          max-width: 100%;
+          height: auto;
+        }
+        
+        .token-price-chart-loading,
+        .token-price-chart-error,
+        .token-price-chart-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 300px;
+          background: #f8f9fa;
+          border-radius: 8px;
+          padding: 16px;
+        }
+        
+        .loading-spinner {
+          border: 3px solid rgba(0, 0, 0, 0.1);
+          border-left-color: #3b82f6;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          animation: spin 1s linear infinite;
+          margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+          .chart-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+          }
+          
+          .timeframe-selector {
+            width: 100%;
+            justify-content: space-between;
+          }
+          
+          .timeframe-button {
+            padding: 4px 8px;
+            font-size: 12px;
+          }
+        }
+      `}</style>
     </div>
   );
 };
