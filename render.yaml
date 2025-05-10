@@ -1,0 +1,10 @@
+ type: web
+    name: memefast-api-proxy
+    env: node
+    buildCommand: cd pump-fun-proxy && npm install
+    startCommand: cd pump-fun-proxy && node unified-server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: PORT
+        value: 10000
