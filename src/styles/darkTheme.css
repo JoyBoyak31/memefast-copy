@@ -1,0 +1,795 @@
+/* Dark Theme for Pump.fun Token Explorer Application */
+
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #1e1238 0%, #0c0c25 100%);
+  color: white;
+  min-height: 100vh;
+}
+
+/* App container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: transparent;
+  align-items: center; /* Center horizontally */
+  width: 1320px;
+}
+
+/* Main content */
+.app-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+}
+
+/* Header styles */
+.app-header {
+  background-color: rgba(30, 30, 60, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  width: 100%; /* Full width */
+}
+
+.app-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(to right, #55a6ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Token list container */
+.token-list-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center; /* Center text content */
+}
+
+.token-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h2 {
+  color: white;
+  background: linear-gradient(to right, #55a6ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 auto; /* Center heading */
+  text-align: center;
+}
+
+/* Token grid layout */
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+  justify-content: center; /* Center grid */
+}
+
+/* Heading styling */
+.trending-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #55a6ff;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Token card */
+.token-card {
+  background-color: rgba(40, 40, 70, 0.6) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  padding: 16px !important;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s !important;
+  cursor: pointer !important;
+  margin-bottom: 16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  text-align: left; /* Text alignment within cards */
+}
+
+.token-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.token-card.highlight-animation {
+  animation: highlight 2s ease-out;
+}
+
+@keyframes highlight {
+  0% { background-color: rgba(85, 166, 255, 0.2); }
+  100% { background-color: rgba(40, 40, 70, 0.6); }
+}
+
+.token-name {
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: white !important; 
+}
+
+.token-symbol {
+  font-size: 14px !important;
+  color: #a1a1aa !important;
+}
+
+.token-logo {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  margin-right: 12px !important;
+  background: #3a3a5e !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.token-logo img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.token-logo-placeholder {
+  background-color: #3a3a5e !important;
+  color: #a1a1aa !important;
+}
+
+.token-price, .token-volume, .token-market-cap, .token-supply, .token-holders {
+  font-weight: 600 !important;
+  color: #55a6ff !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.token-stat-label {
+  font-size: 12px !important;
+  color: #a1a1aa !important;
+  margin-bottom: 2px !important;
+}
+
+.view-details-button {
+  background: #55a6ff !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+  display: block !important;
+  width: 100% !important;
+  margin-top: 12px !important;
+}
+
+.view-details-button:hover {
+  background: #4285f4 !important;
+}
+
+.token-card-body {
+  color: #a1a1aa !important;
+}
+
+/* Search bar */
+.token-search-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto; /* Center search bar */
+}
+
+.token-search-form {
+  display: flex;
+  align-items: center;
+  background-color: rgba(40, 40, 70, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.2s;
+}
+
+.token-search-form.focused {
+  border-color: #55a6ff !important;
+  box-shadow: 0 0 0 3px rgba(85, 166, 255, 0.2) !important;
+}
+
+.token-search-input {
+  flex: 1;
+  border: none;
+  background: none !important;
+  font-size: 16px;
+  padding: 4px 0;
+  color: white !important;
+  outline: none;
+}
+
+.token-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.token-search-button {
+  background-color: #55a6ff !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin-left: 8px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+}
+
+.token-search-button:hover {
+  background-color: #4285f4 !important;
+}
+
+/* Refresh button and status */
+.refresh-button {
+  background-color: #55a6ff !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+}
+
+.refresh-button:hover {
+  background-color: #4285f4 !important;
+}
+
+.layout-toggle-button {
+  background-color: #55a6ff !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+}
+
+.layout-toggle-button:hover {
+  background-color: #4285f4 !important;
+}
+
+.refresh-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px auto; /* Center refresh controls */
+  padding: 8px 16px;
+  background-color: rgba(30, 30, 60, 0.6) !important;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  max-width: 800px;
+  width: 100%;
+}
+
+.refresh-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #a1a1aa !important;
+}
+
+.last-refreshed {
+  color: #a1a1aa !important;
+}
+
+.auto-update-info {
+  color: #a1a1aa !important;
+}
+
+.auto-update-info:before {
+  background-color: #10b981 !important;
+}
+
+.refresh-status {
+  margin: 8px auto; /* Center refresh status */
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: rgba(30, 30, 60, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #a1a1aa !important;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+.refresh-status.success {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: #a7f3d0 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+.refresh-status.error {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fecaca !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+.refresh-status.info {
+  background-color: rgba(3, 105, 161, 0.2) !important;
+  color: #bae6fd !important;
+  border: 1px solid rgba(3, 105, 161, 0.3) !important;
+}
+
+.refresh-status.warning {
+  background-color: rgba(194, 65, 12, 0.2) !important;
+  color: #fed7aa !important;
+  border: 1px solid rgba(194, 65, 12, 0.3) !important;
+}
+
+/* Connection status */
+.connection-status {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: rgba(20, 20, 40, 0.6) !important;
+  color: #a1a1aa !important;
+}
+
+.connection-status.connected {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: #10b981 !important;
+}
+
+.connection-status.connecting {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  color: #f59e0b !important;
+}
+
+.connection-status.disconnected,
+.connection-status.error {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #ef4444 !important;
+}
+
+.reconnect-button {
+  margin-left: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reconnect-button:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Status indicator dots */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  background-color: #a1a1aa !important;
+}
+
+.connected .status-dot {
+  background-color: #10b981 !important;
+}
+
+.connecting .status-dot {
+  background-color: #f59e0b !important;
+}
+
+.disconnected .status-dot,
+.error .status-dot {
+  background-color: #ef4444 !important;
+}
+
+/* Loading elements */
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.1) !important;
+  border-left-color: #55a6ff !important;
+}
+
+.loading-spinner-small {
+  border: 2px solid rgba(255, 255, 255, 0.1) !important;
+  border-left-color: #55a6ff !important;
+}
+
+.refreshing-indicator {
+  color: #a1a1aa !important;
+  text-align: center; /* Center text */
+  margin: 10px auto;
+}
+
+.no-tokens-message {
+  background-color: rgba(30, 30, 60, 0.6) !important;
+  color: #a1a1aa !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  text-align: center;
+  padding: 40px;
+  border-radius: 8px;
+  margin: 20px auto; /* Center message */
+  max-width: 600px;
+}
+
+/* Footer */
+.app-footer {
+  background-color: rgba(30, 30, 60, 0.7) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 16px 24px;
+  color: #a1a1aa !important;
+  width: 100%;
+  text-align: center; /* Center footer text */
+}
+
+.footer-content {
+  color: #a1a1aa !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.api-status {
+  color: #a1a1aa !important;
+}
+
+.api-status a {
+  color: #55a6ff !important;
+  text-decoration: none;
+}
+
+/* Pagination */
+.pagination {
+  margin: 32px auto; /* Center pagination */
+  gap: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination-button {
+  background-color: #55a6ff !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+}
+
+.pagination-button:disabled {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  cursor: not-allowed !important;
+}
+
+.pagination-button:not(:disabled):hover {
+  background-color: #4285f4 !important;
+}
+
+.pagination-info {
+  color: #a1a1aa !important;
+}
+
+/* Token details page */
+.token-details-container {
+  color: white !important;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.token-details {
+  background: rgba(40, 40, 70, 0.6) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.token-details-header {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(30, 30, 60, 0.7) !important;
+}
+
+.token-logo-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 24px;
+  background: #3a3a5e !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.token-logo-large img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.token-logo-placeholder-large {
+  background-color: #3a3a5e !important;
+  color: #a1a1aa !important;
+}
+
+.token-details-body {
+  background-color: rgba(30, 30, 60, 0.3) !important;
+  color: #e4e4e7 !important;
+}
+
+.token-name {
+  color: white !important;
+}
+
+.token-symbol-large {
+  color: #a1a1aa !important;
+}
+
+.token-address {
+  color: #a1a1aa !important;
+}
+
+.token-price-large {
+  color: #55a6ff !important;
+}
+
+.token-stat-card {
+  background: rgba(40, 40, 70, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.token-chart-container h3,
+.token-stats-section h3,
+.token-social-links h3,
+.token-copy-section h3 {
+  color: white !important;
+}
+
+.token-stat-card h4 {
+  color: #a1a1aa !important;
+}
+
+.token-stat-value {
+  color: #55a6ff !important;
+}
+
+.token-description {
+  background: rgba(40, 40, 70, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #a1a1aa !important;
+}
+
+.token-description p {
+  color: #a1a1aa !important;
+}
+
+.token-copy-section {
+  background: rgba(40, 40, 70, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.token-copy-section p {
+  color: #a1a1aa !important;
+}
+
+.social-link {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #a1a1aa !important;
+}
+
+.social-link:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.social-link.twitter {
+  background: rgba(29, 161, 242, 0.15) !important;
+  color: #1da1f2 !important;
+}
+
+.social-link.twitter:hover {
+  background: rgba(29, 161, 242, 0.25) !important;
+}
+
+.social-link.website {
+  background: rgba(108, 92, 231, 0.15) !important;
+  color: #6c5ce7 !important;
+}
+
+.social-link.website:hover {
+  background: rgba(108, 92, 231, 0.25) !important;
+}
+
+.social-link.telegram {
+  background: rgba(0, 136, 204, 0.15) !important;
+  color: #0088cc !important;
+}
+
+.social-link.telegram:hover {
+  background: rgba(0, 136, 204, 0.25) !important;
+}
+
+.social-link.discord {
+  background: rgba(114, 137, 218, 0.15) !important;
+  color: #7289da !important;
+}
+
+.social-link.discord:hover {
+  background: rgba(114, 137, 218, 0.25) !important;
+}
+
+.back-button {
+  background: none !important;
+  border: none !important;
+  color: #55a6ff !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+.back-button:hover {
+  color: #4285f4 !important;
+}
+
+/* Price chart styles */
+.token-price-chart {
+  background: rgba(40, 40, 70, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.timeframe-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #a1a1aa !important;
+  border: none !important;
+}
+
+.timeframe-button.active {
+  background: #55a6ff !important;
+  color: white !important;
+}
+
+.timeframe-button:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.token-price-chart-loading, 
+.token-price-chart-error, 
+.token-price-chart-empty {
+  background: rgba(40, 40, 70, 0.6) !important;
+  color: #a1a1aa !important;
+}
+
+/* Copy token button */
+.copy-token-button {
+  background-color: #55a6ff !important;
+  color: white !important;
+}
+
+.copy-token-button:hover:not(:disabled) {
+  background-color: #4285f4 !important;
+  box-shadow: 0 4px 12px rgba(85, 166, 255, 0.2) !important;
+}
+
+.copy-token-notice {
+  background-color: rgba(40, 40, 70, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #a1a1aa !important;
+}
+
+.copy-token-result.success {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: #a7f3d0 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+.copy-token-result.error {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fecaca !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+.address-container {
+  background-color: rgba(30, 30, 60, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.address-container code {
+  color: #a1a1aa !important;
+}
+
+.copy-address-button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Specific match for screenshot layout */
+.token-list-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the actions */
+  gap: 12px;
+}
+
+/* Additional styles to match screenshot */
+.token-list-container h2,
+.trending-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: left; /* Match screenshot alignment */
+}
+
+/* Container for search and controls */
+.token-search-and-controls {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Loading states */
+.token-list-loading, 
+.token-list-searching {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  margin: 20px auto;
+}

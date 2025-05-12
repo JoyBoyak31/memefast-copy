@@ -382,7 +382,7 @@ const LiveTokenCard = ({ token, onClick, layout = 'grid' }) => {
       </div>
 
       <div className="token-card-footer">
-        <button className="view-details-button">View Details</button>
+        <button className="view-details-button">Copy Token</button>
       </div>
 
       {/* CSS for the token card */}
