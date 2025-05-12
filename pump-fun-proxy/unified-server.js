@@ -892,25 +892,14 @@ server.listen(config.port, () => {
     console.log(`REST API endpoint: http://localhost:${config.port}/api/`);
     console.log(`Socket.IO endpoint: ws://localhost:${config.port}/`);
     console.log(`Health check: http://localhost:${config.port}/health`);
-
-    // Connect to Pump.fun WebSocket
-    connectToPumpFun();
-
-    // Start background refresh of token data
-    console.log('Setting up background refresh of token data...');
-    setInterval(async () => {
-        try {
-            await fetchTrendingTokens(100);
-            console.log('Background refresh of token data completed');
-        } catch (error) {
-            console.error('Error in background refresh:', error);
-        }
-    }, 60000); // Refresh every minute
-
-    // Start simulated updates if unable to connect to real WebSocket after a delay
-    setTimeout(() => {
-        if (!isConnectedToPump) {
-            startSimulatedUpdates();
-        }
-    }, 30000); // Wait 30 seconds before starting simulations
+    console.log('Starting WebSocket connection...');
+    
+    // Add WebSocket functions here if needed
+    
+    // Fetch initial token data
+    fetchTrendingTokens().then(() => {
+        console.log('Initial token data fetched');
+    }).catch(err => {
+        console.error('Error fetching initial token data:', err);
+    });
 });

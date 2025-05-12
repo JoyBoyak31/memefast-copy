@@ -1,9 +1,10 @@
-  # Updated backend API proxy for memefast functionality
-  - type: web
+ type: web
     name: memefast-api-proxy
     env: node
-    buildCommand: cd pump-fun-proxy && npm install
-    startCommand: cd pump-fun-proxy && node unified-server.js
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+      staticPublishPath: dist
+    plan: free
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
